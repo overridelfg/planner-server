@@ -29,7 +29,7 @@ import { USER_SERVICE } from '@app/common/constants/services.constants';
         name: USER_SERVICE,
         transport: Transport.TCP,
         options: {
-          port: 3001,
+          port: 3003,
         },
       },
     ]),

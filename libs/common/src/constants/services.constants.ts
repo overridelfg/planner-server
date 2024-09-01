@@ -1,2 +1,4 @@
 export const USER_SERVICE = 'USER_SERVICE';
 export const AUTH_SERVICE = 'AUTH_SERVICE';
+export const TASKS_SERVICE = 'TASKS_SERVICE';
+export const HABITS_SERVICE = 'HABITS_SERVICE';

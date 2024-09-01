@@ -45,6 +45,24 @@
       "compilerOptions": {
         "tsConfigPath": "libs/common/tsconfig.lib.json"
       }
+    },
+    "tasks": {
+      "type": "application",
+      "root": "apps/tasks",
+      "entryFile": "main",
+      "sourceRoot": "apps/tasks/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/tasks/tsconfig.app.json"
+      }
+    },
+    "habits": {
+      "type": "application",
+      "root": "apps/habits",
+      "entryFile": "main",
+      "sourceRoot": "apps/habits/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/habits/tsconfig.app.json"
+      }
     }
   }
 }

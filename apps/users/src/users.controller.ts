@@ -17,7 +17,6 @@ export class UsersController {
   @MessagePattern('users.create')
   async createUser(@Payload() dto: CreateUserDto) {
     let result: ICreateUsersResponse;
-    console.log(dto);
     const user = await this.usersService.create(dto);
     if (user !== null) {
       result = {
