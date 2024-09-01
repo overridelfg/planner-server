@@ -29,6 +29,8 @@
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-express": "^10.0.0",
     "argon2": "^0.41.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
     "joi": "^17.13.3",
     "mongoose": "^8.6.0",
     "passport": "^0.7.0",

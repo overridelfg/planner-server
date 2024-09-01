@@ -11,6 +11,12 @@ import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from '@app/common/dto/users.dto';
 import { USER_SERVICE } from '@app/common/constants/services.constants';
 import { ClientProxy } from '@nestjs/microservices';
+import { lastValueFrom } from 'rxjs';
+import { ILoginResponse } from '@app/common/types/auth.types';
+import {
+  ICheckEmailResponse,
+  IFindUserResponse,
+} from '@app/common/types/users.types';
 
 @Injectable()
 export class AuthService {
@@ -20,65 +26,79 @@ export class AuthService {
   ) {}
 
   async validateUser(email: string, password: string) {
-    // const user = await this.userService.findUser(email);
-    // const passwordIsMatch = await argon2.verify(user.password, password);
+    const user = await lastValueFrom(
+      this.usersClient.send('users.findUser', email),
+    );
+    const passwordIsMatch = await argon2.verify(user.password, password);
 
-    // if (user && passwordIsMatch) {
-    //   return user;
-    // }
-    return 'hi';
+    if (user && passwordIsMatch) {
+      return user;
+    }
+    throw new UnauthorizedException('User or password are incorrect');
   }
 
   async validateEmail(email: string) {
-    try {
-      try {
-        const result = this.usersClient.send('users.findEmail', email);
-        console.log(result);
-        return result;
-      } catch (err) {
-        console.log('hi');
-      }
-    } catch (error) {
-      throw error;
+    const result = await lastValueFrom(
+      this.usersClient.send('users.findEmail', email),
+    );
+    return result;
+  }
+
+  async login(dto: { email: string; password: string }) {
+    const result: IFindUserResponse = await lastValueFrom(
+      this.usersClient.send('users.findUser', dto.email),
+    );
+
+    const passwordIsMatch = await argon2.verify(
+      result.data.password,
+      dto.password,
+    );
+
+    if (result.status === 400) {
+      return null;
+    }
+
+    if (result.data && passwordIsMatch) {
+      return {
+        user: {
+          email: result.data.email,
+          _id: result.data._id,
+          name: result.data.name,
+        },
+        tokens: {
+          accessToken: this.jwtService.sign({
+            email: result.data.email,
+            id: result.data._id,
+            name: result.data.name,
+          }),
+        },
+      };
+    } else {
+      return null;
     }
   }
 
-  // async login(email: string) {
-  //   const user = await this.userService.findUser(email);
-  //   console.log(user);
-  //   return {
-  //     user: {
-  //       email: user.email,
-  //       _id: user._id,
-  //       name: user.name,
-  //     },
-  //     tokens: {
-  //       accessToken: this.jwtService.sign({
-  //         email,
-  //         id: user._id,
-  //         name: user.name,
-  //       }),
-  //     },
-  //   };
-  // }
-
-  // async register(dto: CreateUserDto) {
-  //   const user = await this.userService.createUser(dto);
-  //   if (user) {
-  //     return {
-  //       user: {
-  //         email: user.email,
-  //         name: user.name,
-  //         _id: user._id,
-  //       },
-  //       tokens: {
-  //         accessToken: this.jwtService.sign({
-  //           email: dto.email,
-  //           id: user._id,
-  //           name: user.name,
-  //         }),
-  //       },
-  //     };
-  //   }
-  // }
+  async register(dto: CreateUserDto) {
+    const result: IFindUserResponse = await lastValueFrom(
+      this.usersClient.send('users.create', dto),
+    );
+    if (result.status === 400) {
+      return null;
+    } else {
+      return {
+        user: {
+          email: result.data.email,
+          _id: result.data._id,
+          name: result.data.name,
+        },
+        tokens: {
+          accessToken: this.jwtService.sign({
+            email: result.data.email,
+            id: result.data._id,
+            name: result.data.name,
+          }),
+        },
+      };
+    }
+  }
 }

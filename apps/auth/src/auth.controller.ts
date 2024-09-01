@@ -1,25 +1,66 @@
-import { Controller } from '@nestjs/common';
+import { Controller, HttpStatus } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
+import { CreateUserDto } from '@app/common/dto/users.dto';
+import {
+  ILoginResponse,
+  IRegisterResponse,
+} from '@app/common/types/auth.types';
 
 @Controller()
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  // @Post('login')
-  // @UseGuards(AuthGuard('auth'))
-  // async signIn(@Body() user: { email: string; password: string }) {
-  //   return await this.authService.login(user.email);
-  // }
-
   @MessagePattern('auth.checkEmail')
   async checkEmail(@Payload() email: string) {
-    console.log(email);
     return await this.authService.validateEmail(email);
   }
 
-  // @Post('register')
-  // async register(@Body() dto: CreateUserDto) {
-  //   return await this.authService.register(dto);
-  // }
+  @MessagePattern('auth.register')
+  async register(@Payload() dto: CreateUserDto) {
+    let result: IRegisterResponse;
+    if (dto) {
+      const user = await this.authService.register(dto);
+      if (user !== null) {
+        result = {
+          status: HttpStatus.OK,
+          message: 'Successfully registered',
+          errors: null,
+          data: user,
+        };
+      } else {
+        result = {
+          status: HttpStatus.BAD_REQUEST,
+          message: 'Bad request',
+          errors: null,
+          data: null,
+        };
+      }
+    }
+    return result;
+  }
+
+  @MessagePattern('auth.login')
+  async login(@Payload() dto: { email: string; password: string }) {
+    let result: ILoginResponse;
+    if (dto) {
+      const user = await this.authService.login(dto);
+      if (user !== null) {
+        result = {
+          status: HttpStatus.OK,
+          message: 'Email exists',
+          errors: null,
+          data: user,
+        };
+      } else {
+        result = {
+          status: HttpStatus.BAD_REQUEST,
+          message: 'Email doesn`t exists',
+          errors: null,
+          data: null,
+        };
+      }
+    }
+    return result;
+  }
 }

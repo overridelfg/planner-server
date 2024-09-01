@@ -33,11 +33,6 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
   async findOne(filterQuery: FilterQuery<TDocument>) {
     const document = await this.model.findOne(filterQuery, {}, { lean: true });
 
-    if (!document) {
-      this.logger.warn('Document not found with filterQuery', filterQuery);
-      throw new NotFoundException('Document not found.');
-    }
-
     return document;
   }
 
@@ -49,11 +44,6 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
       lean: true,
       new: true,
     });
-
-    if (!document) {
-      this.logger.warn(`Document not found with filterQuery:`, filterQuery);
-      throw new NotFoundException('Document not found.');
-    }
 
     return document;
   }
