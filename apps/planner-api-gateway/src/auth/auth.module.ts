@@ -11,6 +11,7 @@ import { AUTH_SERVICE } from '@app/common/constants/services.constants';
         name: AUTH_SERVICE,
         transport: Transport.TCP,
         options: {
+          host: 'auth',
           port: 3002,
         },
       },

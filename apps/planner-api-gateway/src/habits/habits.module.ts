@@ -15,6 +15,7 @@ import { HabitsController } from './habits.controller';
         name: HABITS_SERVICE,
         transport: Transport.TCP,
         options: {
+          host: 'habits',
           port: 3005,
         },
       },

@@ -14,6 +14,7 @@ import { TasksController } from './tasks.controller';
         name: TASKS_SERVICE,
         transport: Transport.TCP,
         options: {
+          host: 'tasks',
           port: 3004,
         },
       },

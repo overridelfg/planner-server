@@ -1,0 +1,71 @@
+services:
+  planner-api-gateway:
+    build:
+      context: .
+      dockerfile: ./apps/planner-api-gateway/Dockerfile
+      target: development
+    command: npm run start:dev planner-api-gateway
+    env_file:
+      - ./apps/planner-api-gateway/.env
+    depends_on:
+      - users
+      - auth
+      - tasks
+      - habits
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3000:3000'
+  auth:
+    build:
+      context: .
+      dockerfile: ./apps/auth/Dockerfile
+      target: development
+    command: npm run start:dev auth
+    env_file:
+      - ./apps/auth/.env
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    expose:
+      - '3002'
+  users:
+    build:
+      context: .
+      dockerfile: ./apps/users/Dockerfile
+      target: development
+    command: npm run start:dev users
+    env_file:
+      - ./apps/users/.env
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    expose:
+      - '3003'
+  tasks:
+    build:
+      context: .
+      dockerfile: ./apps/tasks/Dockerfile
+      target: development
+    command: npm run start:dev tasks
+    env_file:
+      - ./apps/tasks/.env
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    expose:
+      - '3004'
+  habits:
+    build:
+      context: .
+      dockerfile: ./apps/habits/Dockerfile
+      target: development
+    command: npm run start:dev habits
+    env_file:
+      - ./apps/habits/.env
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    expose:
+      - '3005'

@@ -11,6 +11,7 @@ import { USER_SERVICE } from '@app/common/constants/services.constants';
         name: USER_SERVICE,
         transport: Transport.TCP,
         options: {
+          host: 'users',
           port: 3003,
         },
       },
