@@ -17,6 +17,8 @@ services:
       - /usr/src/app/node_modules
     ports:
       - '3000:3000'
+    networks:
+      - backend
   auth:
     build:
       context: .
@@ -28,6 +30,8 @@ services:
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
+    networks:
+      - backend
     expose:
       - '3002'
   users:
@@ -43,6 +47,8 @@ services:
       - /usr/src/app/node_modules
     expose:
       - '3003'
+    networks:
+      - backend
   tasks:
     build:
       context: .
@@ -56,6 +62,8 @@ services:
       - /usr/src/app/node_modules
     expose:
       - '3004'
+    networks:
+      - backend
   habits:
     build:
       context: .
@@ -69,3 +77,8 @@ services:
       - /usr/src/app/node_modules
     expose:
       - '3005'
+    networks:
+      - backend
+networks:
+  backend:
+    driver: bridge
