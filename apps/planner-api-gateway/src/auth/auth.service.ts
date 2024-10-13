@@ -1,4 +1,9 @@
-import { AUTH_SERVICE } from '@app/common/constants/services.constants';
+import {
+  AUTH_CHECK_EMAIL_METHOD,
+  AUTH_LOGIN_METHOD,
+  AUTH_REGISTER_METHOD,
+  AUTH_SERVICE,
+} from '@app/common/constants/services.constants';
 import { CreateUserDto } from '@app/common/dto/users.dto';
 import {
   ILoginResponse,
@@ -15,7 +20,7 @@ export class AuthService {
 
   async validateEmail(email: string) {
     const result: ICheckEmailResponse = await lastValueFrom(
-      this.authClient.send('auth.checkEmail', email),
+      this.authClient.send(AUTH_CHECK_EMAIL_METHOD, email),
     );
     if (result.status === 400) {
       throw new BadRequestException('Email already exists');
@@ -26,7 +31,7 @@ export class AuthService {
 
   async register(dto: CreateUserDto) {
     const result: IRegisterResponse = await lastValueFrom(
-      this.authClient.send('auth.register', dto),
+      this.authClient.send(AUTH_REGISTER_METHOD, dto),
     );
     if (result.status === 400) {
       throw new BadRequestException('User already exists');
@@ -37,7 +42,7 @@ export class AuthService {
 
   async login(dto: { email: string; password: string }) {
     const result: ILoginResponse = await lastValueFrom(
-      this.authClient.send('auth.login', dto),
+      this.authClient.send(AUTH_LOGIN_METHOD, dto),
     );
     console.log(result);
     if (result.status === 400) {

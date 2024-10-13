@@ -9,9 +9,9 @@ export class TasksRepository extends AbstractRepository<Task> {
   protected readonly logger = new Logger(Task.name);
 
   constructor(
-    @InjectModel(Task.name) userModel: Model<Task>,
+    @InjectModel(Task.name) taskModel: Model<Task>,
     @InjectConnection() connection: Connection,
   ) {
-    super(userModel, connection);
+    super(taskModel, connection);
   }
 }

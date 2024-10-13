@@ -9,10 +9,7 @@ import { TasksRepository } from './tasks.repository';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: './apps/tasks/.env',
-    }),
+    ConfigModule.forRoot(),
     DatabaseModule,
     MongooseModule.forFeature([{ name: Task.name, schema: TaskSchema }]),
   ],

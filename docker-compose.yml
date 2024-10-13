@@ -6,19 +6,14 @@ services:
       target: development
     command: npm run start:dev planner-api-gateway
     env_file:
-      - ./apps/planner-api-gateway/.env
-    depends_on:
-      - users
-      - auth
-      - tasks
-      - habits
+      - .env
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     ports:
       - '3000:3000'
     networks:
-      - backend
+      - planner-service
   auth:
     build:
       context: .
@@ -26,14 +21,12 @@ services:
       target: development
     command: npm run start:dev auth
     env_file:
-      - ./apps/auth/.env
+      - .env
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     networks:
-      - backend
-    expose:
-      - '3002'
+      - planner-service
   users:
     build:
       context: .
@@ -41,14 +34,12 @@ services:
       target: development
     command: npm run start:dev users
     env_file:
-      - ./apps/users/.env
+      - .env
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
-    expose:
-      - '3003'
     networks:
-      - backend
+      - planner-service
   tasks:
     build:
       context: .
@@ -56,14 +47,12 @@ services:
       target: development
     command: npm run start:dev tasks
     env_file:
-      - ./apps/tasks/.env
+      - .env
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
-    expose:
-      - '3004'
     networks:
-      - backend
+      - planner-service
   habits:
     build:
       context: .
@@ -71,14 +60,12 @@ services:
       target: development
     command: npm run start:dev habits
     env_file:
-      - ./apps/habits/.env
+      - .env
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
-    expose:
-      - '3005'
     networks:
-      - backend
+      - planner-service
 networks:
-  backend:
+  planner-service:
     driver: bridge

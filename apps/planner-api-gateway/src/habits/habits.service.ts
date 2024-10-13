@@ -1,7 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CreateUserDto } from '@app/common/dto/users.dto';
 import {
+  HABITS_ALL_METHOD,
+  HABITS_CREATE_METHOD,
+  HABITS_DELETE_METHOD,
   HABITS_SERVICE,
+  HABITS_UPDATE_METHOD,
+  HABITS_UPDATE_ORDER_METHOD,
   TASKS_SERVICE,
   USER_SERVICE,
 } from '@app/common/constants/services.constants';
@@ -14,12 +19,14 @@ export class HabitsService {
   constructor(@Inject(HABITS_SERVICE) private habitsClient: ClientProxy) {}
 
   async getHabits(userId: string) {
-    return await lastValueFrom(this.habitsClient.send('habits.all', userId));
+    return await lastValueFrom(
+      this.habitsClient.send(HABITS_ALL_METHOD, userId),
+    );
   }
 
   async createHabit(habit: CreateHabitDto, userId: string) {
     return await lastValueFrom(
-      this.habitsClient.send('habits.create', {
+      this.habitsClient.send(HABITS_CREATE_METHOD, {
         habit: habit,
         userId: userId,
       }),
@@ -32,13 +39,13 @@ export class HabitsService {
     userId: string,
   ) {
     return await lastValueFrom(
-      this.habitsClient.send('habits.update', { newData, taskId, userId }),
+      this.habitsClient.send(HABITS_UPDATE_METHOD, { newData, taskId, userId }),
     );
   }
 
   async deleteHabit(userId: string, habitId: string) {
     return await lastValueFrom(
-      this.habitsClient.send('habits.delete', { userId, habitId }),
+      this.habitsClient.send(HABITS_DELETE_METHOD, { userId, habitId }),
     );
   }
 
@@ -47,7 +54,7 @@ export class HabitsService {
     userId: string,
   ) {
     return await lastValueFrom(
-      this.habitsClient.send('habits.updateOrder', { habitData, userId }),
+      this.habitsClient.send(HABITS_UPDATE_ORDER_METHOD, { habitData, userId }),
     );
   }
 }

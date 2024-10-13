@@ -1,12 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  Param,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model } from 'mongoose';
-import { Habit } from './shema/habit.schema';
+import { Injectable } from '@nestjs/common';
 import { CreateHabitDto } from '@app/common/dto/habit.dto';
 import { HabitRepository } from './habit.repository';
 

@@ -1,6 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CreateUserDto } from '@app/common/dto/users.dto';
 import {
+  TASKS_ALL_METHOD,
+  TASKS_CREATE_METHOD,
+  TASKS_DELETE_METHOD,
   TASKS_SERVICE,
   USER_SERVICE,
 } from '@app/common/constants/services.constants';
@@ -13,12 +16,12 @@ export class TasksService {
   constructor(@Inject(TASKS_SERVICE) private tasksClient: ClientProxy) {}
 
   async getTasks(userId: string) {
-    return await lastValueFrom(this.tasksClient.send('tasks.all', userId));
+    return await lastValueFrom(this.tasksClient.send(TASKS_ALL_METHOD, userId));
   }
 
   async createTask(task: CreateTaskDto, userId: string) {
     return await lastValueFrom(
-      this.tasksClient.send('tasks.create', {
+      this.tasksClient.send(TASKS_CREATE_METHOD, {
         task: task,
         userId: userId,
       }),
@@ -37,7 +40,7 @@ export class TasksService {
 
   async deleteTask(userId: string, taskId: string) {
     return await lastValueFrom(
-      this.tasksClient.send('tasks.delete', { userId, taskId }),
+      this.tasksClient.send(TASKS_DELETE_METHOD, { userId, taskId }),
     );
   }
 }

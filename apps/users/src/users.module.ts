@@ -9,10 +9,7 @@ import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: './apps/users/.env',
-    }),
+    ConfigModule.forRoot(),
     DatabaseModule,
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
   ],

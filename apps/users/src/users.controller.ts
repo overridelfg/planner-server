@@ -1,4 +1,10 @@
-import { Controller, Get, HttpStatus, NotFoundException } from '@nestjs/common';
+import {
+  Controller,
+  HttpStatus,
+  UseFilters,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { CreateUserDto } from '@app/common/dto/users.dto';
@@ -6,15 +12,24 @@ import {
   ICheckEmailResponse,
   ICreateUsersResponse,
   IFindUserResponse,
-  IGetAllUsersResponse,
   IGetUserResponse,
 } from '@app/common/types/users.types';
+import {
+  USERS_CREATE_METHOD,
+  USERS_FIND_EMAIL_METHOD,
+  USERS_FIND_USER_METHOD,
+  USERS_GET_ALL_METHOD,
+  USERS_GET_USER_METHOD,
+} from '@app/common/constants/services.constants';
+import { AppExceptionFilter } from '@app/common/app.exception-filter';
 
+@UseFilters(AppExceptionFilter)
+@UsePipes(ValidationPipe)
 @Controller()
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @MessagePattern('users.create')
+  @MessagePattern(USERS_CREATE_METHOD)
   async createUser(@Payload() dto: CreateUserDto) {
     let result: ICreateUsersResponse;
     const user = await this.usersService.create(dto);
@@ -37,11 +52,11 @@ export class UsersController {
     return result;
   }
 
-  @MessagePattern('users.getAll')
+  @MessagePattern(USERS_GET_ALL_METHOD)
   async getAll() {
     return await this.usersService.getAll();
   }
-  @MessagePattern('users.getUser')
+  @MessagePattern(USERS_GET_USER_METHOD)
   async getUser(@Payload() userId: string) {
     let result: IGetUserResponse;
     const user = await this.usersService.getUser(userId);
@@ -62,7 +77,7 @@ export class UsersController {
     }
   }
 
-  @MessagePattern('users.findEmail')
+  @MessagePattern(USERS_FIND_EMAIL_METHOD)
   async findEmail(@Payload() email: string) {
     let result: ICheckEmailResponse;
     if (email) {
@@ -88,7 +103,7 @@ export class UsersController {
     return result;
   }
 
-  @MessagePattern('users.findUser')
+  @MessagePattern(USERS_FIND_USER_METHOD)
   async findUser(@Payload() email: string) {
     let result: IFindUserResponse;
     if (email) {
